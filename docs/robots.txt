@@ -1,1 +1,1 @@
-Sitemap: https://jjcoen.github.io/vax-ireland/sitemap.xml
+Sitemap: https://jjcoen.github.io/vax-uk/sitemap.xml

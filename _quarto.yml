@@ -4,9 +4,9 @@ project:
   
 website: 
   page-navigation: true
-  title: "Excess Mortality in Ireland" 
-  site-url: "https://jjcoen.github.io/vax-ireland" 
-  repo-url: https://github.com/jjcoen/vax-ireland 
+  title: "Excess Mortality in UK" 
+  site-url: "https://jjcoen.github.io/vax-uk" 
+  repo-url: https://github.com/jjcoen/vax-uk 
   repo-actions: [edit, issue]
   
   page-footer:
