@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "data-sources.html",
+    "href": "data-sources.html",
+    "title": "Data Sources",
+    "section": "",
+    "text": "NOMIS query: National Population projections by single year of age\n\n\nGeography: United Kingdom\nAge: All 5-year age groups\nProjected Year: 2018-2023\nSex: Total\nFormat: Microsoft Excel\nDownload file to raw-data folder and save as nomis-pop-18-23.xlsx\n\n\n\n\nNOMIS query: Population estimates - local authority based by five year age band\n\n\nGeography &gt; countries &gt; All\nDate: 2010, 2012-2017\nAge: All 5-year age groups\nPercent: off\nProjected Year: 2018-2023\nSex: Total\nFormat: Microsoft Excel\nDownload file to raw-data folder and save as nomis-pop-10-17.xlsx"
+  },
+  {
+    "objectID": "data-sources.html#population",
+    "href": "data-sources.html#population",
+    "title": "Data Sources",
+    "section": "",
+    "text": "NOMIS query: National Population projections by single year of age\n\n\nGeography: United Kingdom\nAge: All 5-year age groups\nProjected Year: 2018-2023\nSex: Total\nFormat: Microsoft Excel\nDownload file to raw-data folder and save as nomis-pop-18-23.xlsx\n\n\n\n\nNOMIS query: Population estimates - local authority based by five year age band\n\n\nGeography &gt; countries &gt; All\nDate: 2010, 2012-2017\nAge: All 5-year age groups\nPercent: off\nProjected Year: 2018-2023\nSex: Total\nFormat: Microsoft Excel\nDownload file to raw-data folder and save as nomis-pop-10-17.xlsx"
+  },
+  {
+    "objectID": "data-sources.html#mortality",
+    "href": "data-sources.html#mortality",
+    "title": "Data Sources",
+    "section": "Mortality",
+    "text": "Mortality\nDeaths registered monthly in England and Wales\nThere is a separate file for each year. They are contained in\n./raw-data/ONS-deaths-monthly-yyyy.xls, where yyyy denotes the relevant year."
+  }
+]

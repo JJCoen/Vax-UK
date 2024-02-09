@@ -1,0 +1,54 @@
+project:
+  type: website
+  output-dir: docs
+  
+website: 
+  page-navigation: true
+  title: "Excess Mortality in Ireland" 
+  site-url: "https://jjcoen.github.io/vax-ireland" 
+  repo-url: https://github.com/jjcoen/vax-ireland 
+  repo-actions: [edit, issue]
+  
+  page-footer:
+    right: "This page is built with ❤️ and [Quarto](https://quarto.org/)."
+    left: "&copy; CC-Based on Openscapes, 2022"
+    
+  sidebar:
+    logo: "images/covid19_variant.jpeg"
+    pinned: true
+    align: center
+    tools: 
+      - icon: globe
+        href: https://phinancetechnologies.com/HumanityProjects/Humanity%20projects.asp
+        text: "Humanity Projects"
+      - icon: github
+        href: https://github.com/jjcoen/vax-scotland
+        text: "Data and Analysis"
+
+    style: "docked"
+    search: true
+    collapse-level: 1
+    contents:
+      - href: index.qmd
+        text: Welcome
+      - href: transform.qmd  
+        text: Load and Transform Data
+      - href: explore.qmd
+        text: Exploratory Data Analysis
+      - href: data-sources.qmd
+        text: Data Sources
+
+format:
+  html:
+    theme:
+      light: [cosmo, theme.scss] # from https://github.com/sta210-s22/website/blob/main/_quarto.yml
+      dark: [cosmo, theme-dark.scss]
+    code-copy: true
+    code-overflow: wrap
+    toc: true
+
+
+filters:
+  - quarto
+
+  

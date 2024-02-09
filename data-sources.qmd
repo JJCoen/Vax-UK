@@ -1,0 +1,48 @@
+---
+title: "Data Sources"
+author: "JJC"
+format: html
+editor: visual
+---
+
+## Population
+
+### Population Projections, 2018-2023
+
+[NOMIS query: National Population projections by single year of age](https://www.nomisweb.co.uk/query/construct/summary.asp?reset=yes&mode=construct&dataset=2009&version=0&anal=1)
+
+#### NOMIS dataset selections:
+
+Geography: United Kingdom\
+Age: All 5-year age groups\
+Projected Year: 2018-2023\
+Sex: Total\
+Format: Microsoft Excel
+
+Download file to `raw-data` folder and save as `nomis-pop-18-23.xlsx`
+
+### **Population estimates 2010-2017**
+
+[NOMIS query: Population estimates - local authority based by five year age band](https://www.nomisweb.co.uk/query/construct/summary.asp?mode=construct&version=0&dataset=31)
+
+#### Dataset selections:
+
+Geography \> countries \> All\
+Date: 2010, 2012-2017\
+Age: All 5-year age groups\
+Percent: off\
+Projected Year: 2018-2023\
+Sex: Total\
+Format: Microsoft Excel
+
+Download file to `raw-data` folder and save as `nomis-pop-10-17.xlsx`
+
+## Mortality
+
+[Deaths registered monthly in England and Wales](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/deaths/datasets/monthlyfiguresondeathsregisteredbyareaofusualresidence)
+
+There is a separate file for each year. They are contained in
+
+`./raw-data/ONS-deaths-monthly-yyyy.xls,` where yyyy denotes the relevant year.
+
+### 
