@@ -8,7 +8,7 @@
 
 <meta name="author" content="JJC">
 
-<title>Excess Mortality in Ireland - Transform Population and Mortality Counts</title>
+<title>Excess Mortality in UK - Transform Population and Mortality Counts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./explore.qmd" rel="next">
-<link href="./index.qmd" rel="prev">
+<link href="./explore.html" rel="next">
+<link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -142,7 +142,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.qmd" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Welcome</span></a>
   </div>
 </li>
@@ -154,7 +154,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./explore.qmd" class="sidebar-item-text sidebar-link">
+  <a href="./explore.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Exploratory Data Analysis</span></a>
   </div>
 </li>
@@ -177,7 +177,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#population-by-age-category" id="toc-population-by-age-category" class="nav-link active" data-scroll-target="#population-by-age-category">Population by age category</a></li>
   <li><a href="#mortality-by-age-category" id="toc-mortality-by-age-category" class="nav-link" data-scroll-target="#mortality-by-age-category">Mortality by Age Category</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jjcoen/vax-ireland/edit/main/transform.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jjcoen/vax-ireland/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jjcoen/vax-uk/edit/main/transform.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jjcoen/vax-uk/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -552,21 +552,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>mort_23 <span class="ot">&lt;-</span> <span class="fu">convert_5yr</span>(mort_w_23)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Insert <code>year</code> column</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clean up</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">c</span>(<span class="st">"mort_w_22"</span>, <span class="st">"mort_w_23"</span>, <span class="st">"mort_week_10"</span>, <span class="st">"mort_week_11"</span>, <span class="st">"mort_week_12"</span>, <span class="st">"mort_week_13"</span>, <span class="st">"mort_week_14"</span>, <span class="st">"mort_week_15"</span>,  <span class="st">"mort_week_16"</span>, <span class="st">"mort_week_17"</span>, <span class="st">"mort_week_18"</span>, <span class="st">"mort_week_19"</span>,  <span class="st">"mort_week_20"</span>,  <span class="st">"mort_week_21"</span>, <span class="st">"mort_week_22"</span>, <span class="st">"mort_week_23"</span> ))</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># combine into single table</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>mort_tables <span class="ot">&lt;-</span> <span class="fu">list</span>(mort_10, mort_11, mort_12, mort_13, mort_14, mort_15, mort_16, mort_17, mort_18, mort_19, mort_20, mort_21, mort_22, mort_23)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>mort_uk <span class="ot">&lt;-</span> <span class="fu">rbindlist</span>(mort_tables, <span class="at">use.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(mort_tables, mort_10, mort_11, mort_12, mort_13, mort_14, mort_15, mort_16, mort_17, mort_18, mort_19, mort_20, mort_21, mort_22, mort_23)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># rm(age_0, age_0_4, age_1_4)</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(mort_uk, <span class="at">file =</span> <span class="st">"./processed-data/uk-mort.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>mort_10<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">2010</span>, <span class="dv">7</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>mort_11<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2011</span>, <span class="dv">7</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>mort_12<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2012</span>, <span class="dv">7</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>mort_13<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2013</span>, <span class="dv">7</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>mort_14<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2014</span>, <span class="dv">7</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>mort_15<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2015</span>, <span class="dv">7</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>mort_16<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2016</span>, <span class="dv">7</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>mort_17<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2017</span>, <span class="dv">7</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>mort_18<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2018</span>, <span class="dv">7</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>mort_19<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2019</span>, <span class="dv">7</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>mort_20<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2020</span>, <span class="dv">7</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>mort_21<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2021</span>, <span class="dv">7</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>mort_22<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2022</span>, <span class="dv">7</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>mort_23<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="dv">2023</span>, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Combine into single table</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mort_tables <span class="ot">&lt;-</span> <span class="fu">list</span>(mort_10, mort_11, mort_12, mort_13, mort_14, mort_15, mort_16, mort_17, mort_18, mort_19, mort_20, mort_21, mort_22, mort_23)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mort_uk <span class="ot">&lt;-</span> <span class="fu">rbindlist</span>(mort_tables, <span class="at">use.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(mort_tables, mort_10, mort_11, mort_12, mort_13, mort_14, mort_15, mort_16, mort_17, mort_18, mort_19, mort_20, mort_21, mort_22, mort_23)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># rm(age_0, age_0_4, age_1_4)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(mort_uk, <span class="at">file =</span> <span class="st">"./processed-data/uk-mort.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
@@ -924,12 +944,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.qmd" class="pagination-link">
+      <a href="./index.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./explore.qmd" class="pagination-link">
+      <a href="./explore.html" class="pagination-link">
         <span class="nav-page-text">Exploratory Data Analysis</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

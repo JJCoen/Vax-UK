@@ -38,6 +38,9 @@ transform_mort <- function(mort_week){
     # mort <- mort[2:7, ]
     # mort[1, age_cat := "0-14"]
     
+    # change "01-14" to "1-14"
+    mort[2, age_cat := "1-14"]
+    
     setnames(mort, "count_tot", "count")
     
     

@@ -379,12 +379,35 @@ mort_w_23 <- pivot_longer(mort_week_23, cols = everything(),
 mort_23 <- convert_5yr(mort_w_23)
 ```
 
+Insert `year` column
+
 ```{r}
 
 # clean up
 rm(list = c("mort_w_22", "mort_w_23", "mort_week_10", "mort_week_11", "mort_week_12", "mort_week_13", "mort_week_14", "mort_week_15",  "mort_week_16", "mort_week_17", "mort_week_18", "mort_week_19",  "mort_week_20",  "mort_week_21", "mort_week_22", "mort_week_23" ))
 
-# combine into single table
+mort_10$year <- rep(2010, 7)
+mort_11$year <-rep(2011, 7)
+mort_12$year <-rep(2012, 7)
+mort_13$year <-rep(2013, 7)
+mort_14$year <-rep(2014, 7)
+mort_15$year <-rep(2015, 7)
+mort_16$year <-rep(2016, 7)
+mort_17$year <-rep(2017, 7)
+mort_18$year <-rep(2018, 7)
+mort_19$year <-rep(2019, 7)
+mort_20$year <-rep(2020, 7)
+mort_21$year <-rep(2021, 7)
+mort_22$year <-rep(2022, 7)
+mort_23$year <-rep(2023, 7)
+
+```
+
+Combine into single table
+
+```{r}
+
+
 mort_tables <- list(mort_10, mort_11, mort_12, mort_13, mort_14, mort_15, mort_16, mort_17, mort_18, mort_19, mort_20, mort_21, mort_22, mort_23)
 
 mort_uk <- rbindlist(mort_tables, use.names = TRUE)
