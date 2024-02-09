@@ -1,0 +1,396 @@
+---
+title: "Transform Population and Mortality Counts"
+subtitle: "to comply with ONS age categories"
+author: "JJC"
+format: 
+    html:
+        toc: true
+        toc-depth: 2
+        toc-title: Table of contents
+        # number-sections: true
+        code-fold: true
+        highlight-style: github
+editor: visual
+---
+
+```{r}
+#| include: false
+#| label: load_libraries
+
+library(data.table)
+library(gt)
+library(kableExtra)
+library(tidyverse)
+library(plotly)
+library(janitor)
+library(tidyr)
+library(docstring)
+library(assertr)    # verify function
+library(Hmisc)      # cut2 function
+library(readxl)
+library(writexl)
+```
+
+## Population by age category
+
+Ten age categories in use by ONS in mortality data for year 2018:\
+"Under 1 year", "1-14", "15-44", "45-64", "65-74, " "75-84", "85+"
+
+Since the NOMIS population data for 2018 to 2023 does not record counts for the under 1 year group, it is necessary to combine this with the 1-14 group.
+
+### Population Projections, 2018-2023
+
+```{r}
+#| message: false    
+#| code-summary: "Input source data for population projections by age category for years 2018 to 2023. /n Record estimates in separate numeric vectors for each year"
+
+# The population projections file, "nomis-pop-18-23.xlsx", 
+# records population by age category up to 105+
+# There are separate tables for each year,
+# all on the same sheet
+
+# record age categories
+age_cat <- c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")
+
+
+# 2018 population counts for England and Wales
+pop_proj_18 <- read_excel("./raw-data/nomis-pop-18-23.xlsx",
+                            range = "H7:H29") |> 
+    clean_names() |> 
+    as.data.table()
+
+# 2019 population counts 
+pop_proj_19 <- read_excel("./raw-data/nomis-pop-18-23.xlsx",
+                            range = "H39:H61") |> 
+    clean_names() |> 
+    as.data.table()
+# 2020 population counts 
+pop_proj_20 <- read_excel("./raw-data/nomis-pop-18-23.xlsx",
+                            range = "H71:H93") |> 
+    clean_names() |> 
+    as.data.table()
+# 2021 population counts 
+pop_proj_21 <- read_excel("./raw-data/nomis-pop-18-23.xlsx",
+                            range = "H103:H125") |> 
+    clean_names() |> 
+    as.data.table()
+# 2022 population counts 
+pop_proj_22 <- read_excel("./raw-data/nomis-pop-18-23.xlsx",
+                            range = "H135:H157") |> 
+    clean_names() |> 
+    as.data.table()
+# 2023 population counts 
+pop_proj_23 <- read_excel("./raw-data/nomis-pop-18-23.xlsx",
+                            range = "H167:H189") |> 
+    clean_names() |> 
+    as.data.table()
+```
+
+Sum counts for age categories Aged 85-89, Aged 90-94, Aged 95-99, Aged 100-104, Aged 105+ into a single category "85+"
+
+```{r}
+
+sum_older <- function(dt) {
+    dt[18, ] <- sum(dt[18:22, ])
+    # remove rows above 90 years
+    dt <- dt[1:18, ]
+    return(dt)
+}
+pop_proj_18 <- sum_older(pop_proj_18)
+pop_proj_19 <- sum_older(pop_proj_19)
+pop_proj_20 <- sum_older(pop_proj_20)
+pop_proj_21 <- sum_older(pop_proj_21)
+pop_proj_22 <- sum_older(pop_proj_22)
+pop_proj_23 <- sum_older(pop_proj_23)
+```
+
+Aggregate age categories to six groups in ONS mortality data
+
+```{r}
+
+source("./scripts/transform-pop.R")
+pop_proj_18[, "age_cat" := age_cat]
+setnames(pop_proj_18, "england_and_wales", "count")
+pop_18 <- transform_pop(pop_proj_18)
+pop_18[, "year" := rep(2018, 6)]
+
+pop_proj_19[, "age_cat" := age_cat]
+setnames(pop_proj_19, "england_and_wales", "count")
+pop_19 <- transform_pop(pop_proj_19)
+pop_19[, "year" := rep(2019, 6)]
+
+pop_proj_20[, "age_cat" := age_cat]
+setnames(pop_proj_20, "england_and_wales", "count")
+pop_20 <- transform_pop(pop_proj_20)
+pop_20[, "year" := rep(2020, 6)]
+
+pop_proj_21[, "age_cat" := age_cat]
+setnames(pop_proj_21, "england_and_wales", "count")
+pop_21 <- transform_pop(pop_proj_21)
+pop_21[, "year" := rep(2021, 6)]
+
+pop_proj_22[, "age_cat" := age_cat]
+setnames(pop_proj_22, "england_and_wales", "count")
+pop_22 <- transform_pop(pop_proj_22)
+pop_22[, "year" := rep(2022, 6)]
+
+pop_proj_23[, "age_cat" := age_cat]
+setnames(pop_proj_23, "england_and_wales", "count")
+pop_23 <- transform_pop(pop_proj_23)
+pop_23[, "year" := rep(2023, 6)]
+
+# clean up
+rm(pop_proj_18, pop_proj_19, pop_proj_20, pop_proj_21,
+     pop_proj_22, pop_proj_23)
+```
+
+### **Population Estimates 2010-2017**
+
+```{r}
+#| message: false    
+#| code-summary: "Input source data for population estimates by age category for years 2010 to 2017. /n Record estimates in table with a separate column for each year"
+
+# The population estimates file, "nomis-pop-10-17.xlsx", 
+# records population by age category up to 85+
+pop_est_10_17 <- read_xlsx("./raw-data/nomis-pop-10-17.xlsx", 
+                            range = "A8:I28") |> 
+    as.data.table()
+
+# remove "Column Total" row
+pop_est_10_17 <- pop_est_10_17[1:19, ]
+# combine "Aged under 1 year" and "Aged 1-4 years"
+age_1_4 <- pop_est_10_17[2, c("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017")] |> 
+    as.numeric()
+age_0 <- pop_est_10_17[1, c("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017")] |> 
+    as.numeric()
+age_0_4 <- age_1_4 + age_0
+pop_est_10_17[2, c("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017") := as.list(age_0_4)]
+# remove "Aged under 1 year" row
+pop_est_10_17 <- pop_est_10_17[2:19, ]
+```
+
+Update age categories
+
+```{r}
+
+pop_est_10_17[, "age_cat" := age_cat][, "Age" := NULL]
+
+pop_10 <- pop_est_10_17[, c("age_cat", "2010")]
+setnames(pop_10, "2010", "count")
+pop_10 <- transform_pop(pop_10)
+pop_10[, "year" := rep(2010, 6)]
+
+pop_11 <- pop_est_10_17[, c("age_cat", "2011")]
+setnames(pop_11, "2011", "count")
+pop_11 <- transform_pop(pop_11)
+pop_11[, "year" := rep(2011, 6)]
+
+pop_12 <- pop_est_10_17[, c("age_cat", "2012")]
+setnames(pop_12, "2012", "count")
+pop_12 <- transform_pop(pop_12)
+pop_12[, "year" := rep(2012, 6)]
+
+pop_13 <- pop_est_10_17[, c("age_cat", "2013")]
+setnames(pop_13, "2013", "count")
+pop_13 <- transform_pop(pop_13)
+pop_13[, "year" := rep(2013, 6)]
+
+pop_14 <- pop_est_10_17[, c("age_cat", "2014")]
+setnames(pop_14, "2014", "count")
+pop_14 <- transform_pop(pop_14)
+pop_14[, "year" := rep(2014, 6)]
+
+pop_15 <- pop_est_10_17[, c("age_cat", "2015")]
+setnames(pop_15, "2015", "count")
+pop_15 <- transform_pop(pop_15)
+pop_15[, "year" := rep(2015, 6)]
+
+pop_16 <- pop_est_10_17[, c("age_cat", "2016")]
+setnames(pop_16, "2016", "count")
+pop_16 <- transform_pop(pop_16)
+pop_16[, "year" := rep(2016, 6)]
+
+pop_17 <- pop_est_10_17[, c("age_cat", "2017")]
+setnames(pop_17, "2017", "count")
+pop_17 <- transform_pop(pop_17)
+pop_17[, "year" := rep(2017, 6)]
+
+rm(pop_est_10_17)
+```
+
+Combine population counts for all years into a single table
+
+```{r}
+
+pop_tables <- list(pop_10, pop_11, pop_12, pop_13, pop_14, pop_15, pop_16, pop_17, pop_18, pop_19, pop_20, pop_21, pop_22, pop_23)
+
+pop_uk <- rbindlist(pop_tables, use.names = TRUE)
+
+rm(pop_tables, pop_10, pop_11, pop_12, pop_13, pop_14, pop_15, pop_16, pop_17, pop_18, pop_19, pop_20, pop_21, pop_22, pop_23)
+rm(age_0, age_0_4, age_1_4)
+
+saveRDS(pop_uk, file = "./processed-data/uk-pop.rds")
+```
+
+## Mortality by Age Category
+
+```{r}
+#| message: false
+#| 
+source("./scripts/transform-mort.R")
+
+mort_week_10 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2010.xls",
+                         sheet = "Weekly Figures 2010", 
+                         range = "A16:BA22",
+                         col_names = FALSE) |> 
+    clean_names() |> 
+    as.data.table()
+
+mort_10 <- transform_mort(mort_week_10)
+
+mort_week_11 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2011.xls",
+                         sheet = "Weekly Figures 2011", 
+                         range = "A17:BA23",
+                         col_names = FALSE) |> 
+    clean_names() |> 
+    as.data.table()
+
+mort_11 <- transform_mort(mort_week_11)
+
+mort_week_12 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2012.xls",
+                         sheet = "Weekly Figures 2012", 
+                         range = "A16:BA22",
+                         col_names = FALSE) |> 
+    clean_names() |> 
+    as.data.table()
+
+mort_12 <- transform_mort(mort_week_12)
+
+mort_week_13 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2013.xls",
+                         sheet = "Weekly Figures 2013", 
+                         range = "A16:BA22",
+                         col_names = FALSE) |> 
+    clean_names() |> 
+    as.data.table()
+
+mort_13 <- transform_mort(mort_week_13)
+
+mort_week_14 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2014.xls",
+                         sheet = "Weekly Figures 2014", 
+                         range = "A16:BA22",
+                         col_names = FALSE) |> 
+    clean_names() |> 
+    as.data.table()
+
+mort_14 <- transform_mort(mort_week_14)
+
+mort_week_15 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2015.xls",
+                         sheet = "Weekly Figures 2015", 
+                         range = "A16:BA22",
+                         col_names = FALSE) |> 
+    clean_names() |> 
+    as.data.table()
+
+mort_15 <- transform_mort(mort_week_15)
+
+mort_week_16 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2016.xls",
+                         sheet = "Weekly figures 2016", 
+                         range = "B16:BB22",
+                         col_names = FALSE) |> 
+    clean_names() |> 
+    as.data.table()
+
+mort_16 <- transform_mort(mort_week_16)
+
+mort_week_17 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2017.xls",
+                         sheet = "Weekly figures 2017", 
+                         range = "B16:BB22",
+                         col_names = FALSE) |> 
+    clean_names() |> 
+    as.data.table()
+
+mort_17 <- transform_mort(mort_week_17)
+
+mort_week_18 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2018.xls",
+                         sheet = "Weekly figures 2018",
+                         range = "B16:BB22",
+                         col_names = FALSE) |>
+    clean_names() |>
+    as.data.table()
+
+mort_18 <- transform_mort(mort_week_18)
+
+mort_week_19 <- read_xls("./raw-data/ONS-mort-Eng-Wales-2019.xls",
+                         sheet = "Weekly figures 2019",
+                         range = "B16:BB22",
+                         col_names = FALSE) |>
+    clean_names() |>
+    as.data.table()
+
+mort_19 <- transform_mort(mort_week_19)
+```
+
+Source data for 2020, 2021, 2022, and 2023 records counts for 5-year age categories
+
+```{r}
+#| message: false
+#| 
+source("./scripts/transform-mort-5yr.R")
+
+mort_week_20 <- read_xlsx("./raw-data/ONS-mort-Eng-Wales-2020.xlsx",
+                         sheet = "Weekly figures 2020",
+                         range = "B22:BC41",
+                         col_names = FALSE) |>
+    clean_names() |>
+    as.data.table()
+
+mort_20 <- transform_mort_5yr(mort_week_20)
+
+mort_week_21 <- read_xlsx("./raw-data/ONS-mort-Eng-Wales-2021.xlsx",
+                         sheet = "Weekly figures 2021",
+                         range = "B18:BB37",
+                         col_names = FALSE) |>
+    clean_names() |>
+    as.data.table()
+
+mort_21 <- transform_mort_5yr(mort_week_21)
+
+mort_week_22 <- read_xlsx("./raw-data/ONS-mort-Eng-Wales-2022.xlsx",
+                         sheet = "2",
+                         range = "D7:W59") |>
+    as.data.table()
+
+mort_w_22 <- pivot_longer(mort_week_22, cols = everything(),
+             names_to = "age_cat", 
+             values_to = "count") |> 
+    as.data.table()
+
+mort_22 <- convert_5yr(mort_w_22)
+
+mort_week_23 <- read_xlsx("./raw-data/ONS-mort-Eng-Wales-2023.xlsx",
+                         sheet = "2",
+                         range = "D7:W59") |>
+    as.data.table()
+mort_w_23 <- pivot_longer(mort_week_23, cols = everything(),
+             names_to = "age_cat", 
+             values_to = "count") |> 
+    as.data.table()
+
+mort_23 <- convert_5yr(mort_w_23)
+```
+
+```{r}
+
+# clean up
+rm(list = c("mort_w_22", "mort_w_23", "mort_week_10", "mort_week_11", "mort_week_12", "mort_week_13", "mort_week_14", "mort_week_15",  "mort_week_16", "mort_week_17", "mort_week_18", "mort_week_19",  "mort_week_20",  "mort_week_21", "mort_week_22", "mort_week_23" ))
+
+# combine into single table
+mort_tables <- list(mort_10, mort_11, mort_12, mort_13, mort_14, mort_15, mort_16, mort_17, mort_18, mort_19, mort_20, mort_21, mort_22, mort_23)
+
+mort_uk <- rbindlist(mort_tables, use.names = TRUE)
+
+rm(mort_tables, mort_10, mort_11, mort_12, mort_13, mort_14, mort_15, mort_16, mort_17, mort_18, mort_19, mort_20, mort_21, mort_22, mort_23)
+# rm(age_0, age_0_4, age_1_4)
+
+saveRDS(mort_uk, file = "./processed-data/uk-mort.rds")
+```
