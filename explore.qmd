@@ -208,7 +208,7 @@ ggplot(data=uk_xs_base, aes(x=age_cat, y=xs_diff,
   theme(legend.position='top', 
         legend.justification='left',
         legend.direction='horizontal') 
-# ggsave("./figures/method2a-base-diff-ons.jpeg")
+## ggsave("./figures/method2a-base-diff-ons.jpeg")
 ```
 
 ## EuroStat Mortality Data
@@ -350,8 +350,11 @@ yleft <- textGrob(expression(paste("deaths per 100,000")),
 bottom <- textGrob("years", gp = gpar(fontsize = 20))
 
 # Lay out plots
-uni <- grid.arrange(grobs=g_all, ncol = 2, nrow = 3, 
+grid.arrange(grobs=g_all, ncol = 2, nrow = 3, 
                     left = yleft, bottom = bottom)
+#save
+g <- arrangeGrob(g0, g15, g45, g65, g75, g85, nrow=3) #generates g
+ggsave(file="./figures/linear_fit.jpeg", g) #saves g
 ```
 
 ```{r}

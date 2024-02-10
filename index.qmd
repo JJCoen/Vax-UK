@@ -1,20 +1,18 @@
 ---
 title: "Change in Mortality Rates for England and Wales"
-subtitle: "for the years 2010 to 2022"
+subtitle: "for the years 2020 to 2023"
 editor_options: 
   chunk_output_type: inline
 ---
 
 ## Number of Deaths above Average
 
-
+![](figures/method1-diff-avg.jpeg)
 
 ## Death Rate Difference from 2019 Baseline
 
-### Office of National Statistics data
-
-
+![](figures/method2a-base-diff-ons.jpeg)
 
 ## Death Rate difference from Linear Fit
 
-
+![](figures/linear_fit.jpeg)

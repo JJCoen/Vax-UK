@@ -10,7 +10,7 @@ website:
   repo-actions: [edit, issue]
   
   page-footer:
-    right: "This page is built with ❤️ and [Quarto](https://quarto.org/)."
+    right: "This page is built with [Quarto](https://quarto.org/)."
     left: "&copy; CC-Based on Openscapes, 2022"
     
   sidebar:
