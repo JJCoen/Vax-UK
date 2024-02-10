@@ -36,7 +36,7 @@ library(purrr)
 ![5-year average, 2015 to 2019](figures/method_1.png)
 
 ```{r}
-
+#| label: "excess over average"
 uk_mort <- readRDS(file = "./processed-data/uk-mort.rds") |> 
     setDT()
 uk_mort[, mort_count := count][, count := NULL]
@@ -63,7 +63,9 @@ Plot changes in excess mortality
 
 ```{r}
 #| message: false
-#| 
+#| label: "plot method 1"
+
+uk_mort_xs[, year := factor(year)]
 
 ggplot(uk_mort_xs, aes(x=age_cat, y=mort_xs, 
                         fill= year)) +
@@ -90,7 +92,8 @@ ggplot(uk_mort_xs, aes(x=age_cat, y=mort_xs,
 Population data does not have a separate age category for "Under 1 year". Add under 1 yr to the "1-14" group.
 
 ```{r}
-
+#| label: "combine under 1 yr into 1-14 yrs"
+#| 
 num_0 <- uk_mort[age_cat == "Under 1 year", 
                  mort_count, by = year][, mort_count] 
 num_1_14 <- uk_mort[age_cat == "1-14", 
@@ -109,7 +112,7 @@ Calculate mortality rates per 100,000 persons for each age category
 
 ```{r}
 #| include: false
-#| 
+#| label: "mortality rates"
 
 uk_pop <- readRDS(file = "./processed-data/uk-pop.rds") |> 
     setDT()
@@ -127,23 +130,21 @@ uk_dt |>
 Output as Excel Table
 
 ```{r}
+#| label: "output to excel"
+#| 
 # excess_table <- pivot_wider(uk_mort_xs[, .(year, age_cat, mort_xs)], 
 #             names_from = year, 
 #             values_from = mort_xs)
 # 
 # write_xlsx(excess_table, path = "./processed-data/Table_10_excess_avg.xlsx")
-```
 
-Extract years 2020 to 2022
-
-```{r}
-
-excess_base <- uk_dt[year %in% 2020:2022, .(year, age_cat, xs_base)]
-
-excess_table <- pivot_wider(excess_base, names_from = year, 
-            values_from = xs_base)
-
-write_xlsx(excess_table, path = "./processed-data/Table_11_excess_base.xlsx")
+# label: "excess over baseline"
+# excess_base <- uk_dt[year %in% 2020:2022, .(year, age_cat, xs_base)]
+# 
+# excess_table <- pivot_wider(excess_base, names_from = year, 
+#             values_from = xs_base)
+# 
+# write_xlsx(excess_table, path = "./processed-data/Table_11_excess_base.xlsx")
 ```
 
 ## Method 2A: Difference from 2019 baseline
@@ -152,7 +153,7 @@ write_xlsx(excess_table, path = "./processed-data/Table_11_excess_base.xlsx")
 
 ```{r}
 #| message: false  
-#| # Set the base rate from year 2019 values 
+#| label: "base rate for 2019"
 
 # Set the base rate from year 2019 values
 base <- uk_dt[year==2019, rate]
@@ -174,6 +175,8 @@ uk_xs_base |>
 Convert to Excel Table
 
 ```{r}
+#| label: "excel again"
+#| 
 # excess_diff <- uk_dt[year %in% 2020:2022, .(year, age_cat, xs_diff)]  
 # 
 # diff_table <- pivot_wider(excess_diff, names_from = year,              values_from = xs_diff)  
@@ -184,7 +187,8 @@ Convert to Excel Table
 
 ```{r}
 #| message: false
-
+#| label: "plot Method 2A"
+#| 
 uk_xs_base[, year := as.factor(year)]
 ggplot(data=uk_xs_base, aes(x=age_cat, y=xs_diff, 
                         fill= year)) +
@@ -198,8 +202,8 @@ ggplot(data=uk_xs_base, aes(x=age_cat, y=xs_diff,
       caption = "ONS Deaths Registered and NOMIS population, \nEngland and Wales",
       x = "age category",
       y = "death rate above baseline") +
-  # annotate(geom = "text", x = "1-14", y = 1750,
-  #           label = "Method 2A") +
+  annotate(geom = "text", x = "1-14", y = 15,
+            label = "Method 2A") +
   theme_minimal() +
   theme(legend.position='top', 
         legend.justification='left',
@@ -215,39 +219,39 @@ ggplot(data=uk_xs_base, aes(x=age_cat, y=xs_diff,
 #| message: false  
 #| 
 
-# Set the base rate from year 2019 values
-base <- EStat_dt[Year==2019, rate]
-# Create a baseline vector for the two years 2020 - 2021
-base <- rep(base, 2)
-
-# Calculate difference between yearly death rate and  
-# death rate for 2019 
-EStat_dt[Year %in% 2020:2021, xs_diff := round(rate - base, 5)]  
-
-EStat_dt[Year %in% 2020:2021,] |>   
-    head() |> 
-    gt()
+# # Set the base rate from year 2019 values
+# base <- EStat_dt[Year==2019, rate]
+# # Create a baseline vector for the two years 2020 - 2021
+# base <- rep(base, 2)
+# 
+# # Calculate difference between yearly death rate and  
+# # death rate for 2019 
+# EStat_dt[Year %in% 2020:2021, xs_diff := round(rate - base, 5)]  
+# 
+# EStat_dt[Year %in% 2020:2021,] |>   
+#     head() |> 
+#     gt()
 ```
 
 ```{r}
 #| message: false
-ggplot(EStat_dt[Year %in% 2020:2021,], 
-       aes(x=age_cat, y=xs_diff, 
-                        fill= Year)) +
-  geom_bar(stat="identity", position=position_dodge())+
-  scale_fill_brewer(palette="Paired") +
-  labs(
-  title ="0-4 years: only group with excess mortality",
-  subtitle = waiver(),
-  caption = "ESTAT mortality by age dataset DEMO_MAGEC",
-  x = "age category",
-  y = "death rate above average") +
-  theme_minimal() +
-        annotate(geom = "text", x = "75+", y = 1300, 
-             label = "Method 2A") +
-  theme(legend.position='top', 
-        legend.justification='left',
-        legend.direction='horizontal') 
+# ggplot(EStat_dt[Year %in% 2020:2021,], 
+#        aes(x=age_cat, y=xs_diff, 
+#                         fill= Year)) +
+#   geom_bar(stat="identity", position=position_dodge())+
+#   scale_fill_brewer(palette="Paired") +
+#   labs(
+#   title ="0-4 years: only group with excess mortality",
+#   subtitle = waiver(),
+#   caption = "ESTAT mortality by age dataset DEMO_MAGEC",
+#   x = "age category",
+#   y = "death rate above average") +
+#   theme_minimal() +
+#         annotate(geom = "text", x = "75+", y = 1300, 
+#              label = "Method 2A") +
+#   theme(legend.position='top', 
+#         legend.justification='left',
+#         legend.direction='horizontal') 
 # ggsave("./figures/method2a-base-diff-estat.jpeg")
 ```
 
@@ -258,6 +262,7 @@ ggplot(EStat_dt[Year %in% 2020:2021,],
 ### Linear Fit of Death Rate for years 2010 to 2019
 
 ```{r}
+#| label: "check linear fit"
 #| warning: false
 #| fig-height: 12
 
@@ -333,6 +338,7 @@ g_all <- list(g0, g15, g45, g65, g75, g85) %>%
 [Plot Function](https://community.rstudio.com/t/common-axis-title-in-grid-arrange/96353/2 "source code")
 
 ```{r}
+#| label: "plot death rate Vs year"
 #| fig-height: 12
 #| fig-width: 10
 #| message: false
