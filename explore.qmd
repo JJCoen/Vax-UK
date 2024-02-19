@@ -273,7 +273,7 @@ g0 <- ggplot(uk_lin_fit[age_cat == "1-14", ],
                 aes(x = year, y = rate)) + 
   geom_point(size = 3, shape=10)+
     geom_smooth(method = lm, se=FALSE) +
-    stat_regline_equation(label.x = 2017, label.y = 37.5,
+    stat_regline_equation(label.x = 2017, label.y = 37.5, size = 4,
         aes(label =  paste(after_stat(rr.label), sep = "~~~~"))) +
   # x-axis breaks for year from 2010 to 2022
   scale_x_continuous(breaks = 2010:2019) +
@@ -283,7 +283,7 @@ g15 <- ggplot(uk_lin_fit[age_cat == "15-44", ],
                 aes(x = year, y = rate)) + 
   geom_point(size = 3, shape=10)+
     geom_smooth(method = lm, se=FALSE) +
-    stat_regline_equation(label.x = 2017, label.y = 65,
+    stat_regline_equation(label.x = 2017, label.y = 65, size = 4,
         aes(label =  paste(after_stat(rr.label), sep = "~~~~"))) +
   # x-axis breaks for year from 2010 to 2022
   scale_x_continuous(breaks = 2010:2019) +
@@ -293,7 +293,7 @@ g45 <- ggplot(uk_lin_fit[age_cat == "45-64", ],
                 aes(x = year, y = rate)) + 
   geom_point(size = 3, shape=10)+
     geom_smooth(method = lm, se=FALSE) +
-    stat_regline_equation(label.x = 2017, label.y = 350,
+    stat_regline_equation(label.x = 2017, label.y = 350, size = 4,
         aes(label =  paste(after_stat(rr.label), sep = "~~~~"))) +
   # x-axis breaks for year from 2010 to 2022
   scale_x_continuous(breaks = 2010:2019) +
@@ -303,7 +303,7 @@ g65 <- ggplot(uk_lin_fit[age_cat == "65-74", ],
                 aes(x = year, y = rate)) + 
   geom_point(size = 3, shape=10)+
     geom_smooth(method = lm, se=FALSE) +
-    stat_regline_equation(label.x = 2017, label.y = 1300,
+    stat_regline_equation(label.x = 2017, label.y = 1300, size = 4,
         aes(label =  paste(after_stat(rr.label), sep = "~~~~"))) +
   # x-axis breaks for year from 2010 to 2022
   scale_x_continuous(breaks = 2010:2019) +
@@ -313,7 +313,7 @@ g75 <- ggplot(uk_lin_fit[age_cat == "75-84", ],
                 aes(x = year, y = rate)) + 
   geom_point(size = 3, shape=10)+
     geom_smooth(method = lm, se=FALSE) +
-    stat_regline_equation(label.x = 2017, label.y = 4300,
+    stat_regline_equation(label.x = 2017, label.y = 4300, size = 4,
         aes(label =  paste(after_stat(rr.label), sep = "~~~~"))) +
   # x-axis breaks for year from 2010 to 2022
   scale_x_continuous(breaks = 2010:2019) +
@@ -323,7 +323,7 @@ g85 <- ggplot(uk_lin_fit[age_cat == "85+", ],
                 aes(x = year, y = rate)) + 
   geom_point(size = 3, shape=10)+
     geom_smooth(method = lm, se=FALSE) +
-    stat_regline_equation(label.x = 2017, label.y = 14500,
+    stat_regline_equation(label.x = 2017, label.y = 14500, size = 4,
         aes(label =  paste(after_stat(rr.label), sep = "~~~~"))) +
   # x-axis breaks for year from 2010 to 2022
   scale_x_continuous(breaks = 2010:2019) +
